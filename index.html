@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Content Engine | GOD TIER v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --accent: #D86DCB;
+            --accent-glow: rgba(216, 109, 203, 0.4);
+            --linkedin: #0A66C2;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --green: #00D26A;
+            --red: #FF4757;
+            --yellow: #FFA502;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(216, 109, 203, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(10, 102, 194, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--linkedin));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-ghost {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-linkedin {
+            background: var(--linkedin);
+        }
+
+        .btn-linkedin:hover {
+            box-shadow: 0 4px 20px rgba(10, 102, 194, 0.4);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(216, 109, 203, 0.2);
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .card-title span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Analytics Bar */
+        .analytics-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .analytics-bar { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .analytics-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .analytics-item:hover {
+            border-color: var(--linkedin);
+            transform: translateY(-2px);
+        }
+
+        .analytics-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .analytics-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .analytics-change {
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+        /* Post Editor */
+        .editor-container {
+            position: relative;
+        }
+
+        .editor {
+            width: 100%;
+            min-height: 350px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .editor:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .editor::placeholder {
+            color: var(--text-muted);
+        }
+
+        .editor-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .char-count {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .char-count.warning { color: var(--yellow); }
+        .char-count.danger { color: var(--red); }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Viral Score */
+        .viral-score {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(216, 109, 203, 0.1), rgba(10, 102, 194, 0.1));
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .viral-gauge {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent) 0deg, var(--accent) calc(var(--score) * 3.6deg), var(--border) calc(var(--score) * 3.6deg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .viral-gauge::before {
+            content: '';
+            width: 75px;
+            height: 75px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .viral-number {
+            position: relative;
+            z-index: 1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .viral-details {
+            flex: 1;
+        }
+
+        .viral-label {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .viral-breakdown {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .viral-checklist {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+        }
+
+        /* Templates */
+        .template-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .template-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .template-tab:hover, .template-tab.active {
+            background: rgba(216, 109, 203, 0.15);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* Hook Cards */
+        .hook-card {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hook-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .hook-card:hover {
+            border-color: var(--accent);
+            background: rgba(216, 109, 203, 0.05);
+            transform: translateX(4px);
+        }
+
+        .hook-card:hover::before {
+            opacity: 1;
+        }
+
+        .hook-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .hook-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .hook-category {
+            padding: 3px 10px;
+            background: rgba(216, 109, 203, 0.15);
+            border-radius: 4px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .hook-score {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* AI Rewrite */
+        .rewrite-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .rewrite-btn {
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .rewrite-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(216, 109, 203, 0.1);
+        }
+
+        .rewrite-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .rewrite-btn.loading::after {
+            content: '...';
+            animation: dots 1s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Engagement Estimator */
+        .engagement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .engagement-item {
+            text-align: center;
+            padding: 16px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .engagement-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .engagement-label {
+            font-size: 0.625rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Best Times */
+        .time-heatmap {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .time-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .time-header {
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.6rem;
+        }
+
+        .time-slot {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .time-slot:hover {
+            transform: scale(1.15);
+            z-index: 2;
+        }
+
+        .heat-low { background: rgba(0, 210, 106, 0.15); }
+        .heat-med { background: rgba(0, 210, 106, 0.35); }
+        .heat-high { background: rgba(0, 210, 106, 0.55); }
+        .heat-max { background: rgba(0, 210, 106, 0.85); color: #000; font-weight: 600; }
+
+        /* Hashtags */
+        .hashtag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .hashtag {
+            padding: 6px 12px;
+            background: rgba(10, 102, 194, 0.15);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--linkedin);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .hashtag:hover {
+            background: rgba(10, 102, 194, 0.3);
+            border-color: var(--linkedin);
+        }
+
+        .hashtag.selected {
+            background: var(--linkedin);
+            color: white;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .quick-link {
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-link:hover {
+            border-color: var(--linkedin);
+            color: var(--text-primary);
+            background: rgba(10, 102, 194, 0.1);
+        }
+
+        /* Scroll */
+        .scroll-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--green);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 210, 106, 0.3);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(216, 109, 203, 0.1);
+        }
+
+        .positive { color: var(--green); }
+        .negative { color: var(--red); }
+
+        /* Tabs */
+        .tab-container {
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 10px 16px;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .tab:hover {
+            color: var(--text-secondary);
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <div>
+                <div class="logo">✍️ LinkedIn Content Engine</div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 4px;">Build your personal brand with GOD TIER content</div>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="btn btn-ghost" onclick="saveDraft()">💾 Save Draft</button>
+                <button class="btn btn-ghost" onclick="copyToClipboard()">📋 Copy</button>
+                <a href="https://www.linkedin.com/feed/" target="_blank" class="btn btn-linkedin">🔗 Open LinkedIn</a>
+                <button class="btn btn-linkedin" onclick="postToLinkedIn()">📤 Post to LinkedIn</button>
+            </div>
+        </header>
+
+        <!-- LinkedIn Analytics -->
+        <div class="analytics-bar">
+            <a href="https://www.linkedin.com/in/jasondcosta/recent-activity/all/" target="_blank" class="analytics-item">
+                <div class="analytics-value">2,847</div>
+                <div class="analytics-label">Followers</div>
+                <div class="analytics-change positive">↑ 12% this month</div>
+            </a>
+            <a href="https://www.linkedin.com/analytics/profile-views/" target="_blank" class="analytics-item">
+                <div class="analytics-value">1,423</div>
+                <div class="analytics-label">Profile Views</div>
+                <div class="analytics-change positive">↑ 28% this week</div>
+            </a>
+            <a href="https://www.linkedin.com/analytics/post-impressions/" target="_blank" class="analytics-item">
+                <div class="analytics-value">45.2K</div>
+                <div class="analytics-label">Post Impressions</div>
+                <div class="analytics-change positive">↑ 45%</div>
+            </a>
+            <a href="https://www.linkedin.com/mynetwork/invite-connect/connections/" target="_blank" class="analytics-item">
+                <div class="analytics-value">3.2%</div>
+                <div class="analytics-label">Engagement Rate</div>
+                <div class="analytics-change positive">↑ 0.4%</div>
+            </a>
+            <a href="https://www.linkedin.com/search/results/content/?searchKeyword=dubai%20real%20estate" target="_blank" class="analytics-item">
+                <div class="analytics-value">Top 5%</div>
+                <div class="analytics-label">SSI Rank</div>
+                <div class="analytics-change">Industry: Real Estate</div>
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <a href="https://www.linkedin.com/feed/" target="_blank" class="quick-link">📰 Feed</a>
+            <a href="https://www.linkedin.com/notifications/" target="_blank" class="quick-link">🔔 Notifications</a>
+            <a href="https://www.linkedin.com/messaging/" target="_blank" class="quick-link">💬 Messages</a>
+            <a href="https://www.linkedin.com/mynetwork/" target="_blank" class="quick-link">👥 My Network</a>
+            <a href="https://www.linkedin.com/in/jasondcosta/edit/forms/publish-post/" target="_blank" class="quick-link">✏️ Create Post</a>
+            <a href="https://www.linkedin.com/analytics/" target="_blank" class="quick-link">📊 Analytics Dashboard</a>
+            <a href="https://www.linkedin.com/sales/ssi" target="_blank" class="quick-link">📈 SSI Score</a>
+        </div>
+
+        <div class="grid">
+            <!-- Main Editor -->
+            <div>
+                <!-- Viral Score -->
+                <div class="viral-score">
+                    <div class="viral-gauge" style="--score: 0;" id="viralGauge">
+                        <span class="viral-number" id="viralScore">0</span>
+                    </div>
+                    <div class="viral-details">
+                        <div class="viral-label">🔥 Viral Potential Score</div>
+                        <div class="viral-breakdown" id="viralBreakdown">
+                            Write something to see your viral potential...
+                        </div>
+                        <div class="viral-checklist" id="viralChecklist"></div>
+                    </div>
+                </div>
+
+                <!-- Template Selection -->
+                <div class="card">
+                    <div class="card-title"><span>📝 Post Type</span></div>
+                    <div class="template-tabs">
+                        <div class="template-tab active" onclick="setTemplate('insight')">💡 Insight</div>
+                        <div class="template-tab" onclick="setTemplate('story')">📖 Story</div>
+                        <div class="template-tab" onclick="setTemplate('contrarian')">🔥 Contrarian</div>
+                        <div class="template-tab" onclick="setTemplate('list')">📋 List</div>
+                        <div class="template-tab" onclick="setTemplate('carousel')">🎠 Carousel</div>
+                        <div class="template-tab" onclick="setTemplate('poll')">📊 Poll</div>
+                        <div class="template-tab" onclick="setTemplate('achievement')">🏆 Achievement</div>
+                        <div class="template-tab" onclick="setTemplate('question')">❓ Question</div>
+                    </div>
+                </div>
+
+                <!-- Editor -->
+                <div class="card">
+                    <div class="card-title">
+                        <span>✏️ Write Your Post</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">Tip: First 3 lines are critical</span>
+                    </div>
+                    <div class="editor-container">
+                        <textarea class="editor" id="postEditor" placeholder="Start with a hook that stops the scroll...
+
+🎯 HOOK FORMULAS THAT WORK:
+
+• &quot;Everyone thinks [X]. They're wrong. Here's why:&quot;
+• &quot;I spent [time] doing [X]. Here are [N] lessons:&quot;
+• &quot;The best advice I ever ignored:&quot;
+• &quot;Unpopular opinion: [controversial take]&quot;
+• &quot;[Big number] [result]. Here's exactly how:&quot;
+• &quot;Stop [common behavior]. Start [better alternative].&quot;
+• &quot;[Industry] has a secret. Most won't tell you this:&quot;
+
+Write bold. No hedging. Be direct." oninput="analyzePost()"></textarea>
+                    </div>
+                    <div class="editor-stats">
+                        <div class="char-count" id="charCount">0 / 3,000 characters</div>
+                        <div class="editor-actions">
+                            <button class="btn btn-ghost btn-sm" onclick="clearEditor()">🗑️ Clear</button>
+                            <button class="btn btn-ghost btn-sm" onclick="loadDraft()">📂 Load</button>
+                            <button class="btn btn-sm" onclick="postToLinkedIn()">📤 Post Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Rewrite with Claude -->
+                <div class="card">
+                    <div class="card-title">
+                        <span>🤖 AI Rewrite (Claude-Powered)</span>
+                        <span id="aiStatus" style="font-size: 0.7rem; color: var(--green);">● Ready</span>
+                    </div>
+                    <div class="rewrite-options">
+                        <button class="rewrite-btn" id="btn-bold" onclick="aiRewrite('bold')">💪 More Bold</button>
+                        <button class="rewrite-btn" id="btn-story" onclick="aiRewrite('story')">📖 Add Story</button>
+                        <button class="rewrite-btn" id="btn-data" onclick="aiRewrite('data')">📊 Add Data</button>
+                        <button class="rewrite-btn" id="btn-controversial" onclick="aiRewrite('controversial')">🔥 Controversial</button>
+                        <button class="rewrite-btn" id="btn-concise" onclick="aiRewrite('concise')">✂️ Concise</button>
+                        <button class="rewrite-btn" id="btn-emotional" onclick="aiRewrite('emotional')">❤️ Emotional</button>
+                        <button class="rewrite-btn" id="btn-hook" onclick="aiRewrite('hook')">🎣 Better Hook</button>
+                        <button class="rewrite-btn" id="btn-cta" onclick="aiRewrite('cta')">📢 Add CTA</button>
+                        <button class="rewrite-btn" id="btn-professional" onclick="aiRewrite('professional')">👔 Professional</button>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        💡 Tip: Select text to rewrite only that portion, or rewrite the entire post
+                    </div>
+                </div>
+
+                <!-- Engagement Estimator -->
+                <div class="card">
+                    <div class="card-title"><span>📈 Estimated Engagement</span></div>
+                    <div class="engagement-grid">
+                        <div class="engagement-item">
+                            <div class="engagement-value positive" id="estLikes">0</div>
+                            <div class="engagement-label">Likes</div>
+                        </div>
+                        <div class="engagement-item">
+                            <div class="engagement-value" id="estComments">0</div>
+                            <div class="engagement-label">Comments</div>
+                        </div>
+                        <div class="engagement-item">
+                            <div class="engagement-value" id="estImpressions">0</div>
+                            <div class="engagement-label">Impressions</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.8rem; color: var(--text-secondary);">
+                        <div>📖 Readability: <strong id="readabilityScore">--</strong></div>
+                        <div>🎣 Hook: <strong id="hookStrength">--</strong></div>
+                        <div>📝 Word Count: <strong id="wordCount">0</strong></div>
+                        <div>⏱️ Read Time: <strong id="readTime">0s</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+                <!-- Hook Generator -->
+                <div class="card">
+                    <div class="card-title">
+                        <span>🎣 Hook Generator</span>
+                        <button class="btn btn-sm btn-ghost" onclick="refreshHooks()">🔄 Refresh</button>
+                    </div>
+                    <div class="category-filter">
+                        <button class="category-btn active" onclick="filterHooks('all')">All</button>
+                        <button class="category-btn" onclick="filterHooks('realestate')">🏢 Real Estate</button>
+                        <button class="category-btn" onclick="filterHooks('ai')">🤖 AI</button>
+                        <button class="category-btn" onclick="filterHooks('strategy')">📊 Strategy</button>
+                        <button class="category-btn" onclick="filterHooks('leadership')">👔 Leadership</button>
+                        <button class="category-btn" onclick="filterHooks('career')">🚀 Career</button>
+                    </div>
+                    <div class="scroll-container" id="hooksList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Hashtag Optimizer -->
+                <div class="card">
+                    <div class="card-title">
+                        <span># Hashtags</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);" id="hashtagCount">0/5 selected</span>
+                    </div>
+                    <div class="hashtag-list" id="hashtagList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Best Times to Post -->
+                <div class="card">
+                    <div class="card-title"><span>⏰ Best Times (Dubai/GST)</span></div>
+                    <div class="time-heatmap" id="timeHeatmap">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">
+                        🟢 <strong>Best:</strong> Tue-Thu 8-10AM • 12-1PM Dubai time<br>
+                        <a href="https://www.linkedin.com/analytics/post-impressions/" target="_blank" style="color: var(--linkedin);">View your actual best times →</a>
+                    </div>
+                </div>
+
+                <!-- Competitor Inspiration -->
+                <div class="card">
+                    <div class="card-title"><span>👀 Viral Post Patterns</span></div>
+                    <div class="scroll-container" id="inspirationPosts" style="max-height: 250px;">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // HOOKS DATABASE - Industry Specific for Dubai Real Estate + AI
+        // ═══════════════════════════════════════════════════════════════
+        const HOOKS = [
+            // Dubai Real Estate
+            { text: "Everyone in Dubai real estate thinks location is everything. They're wrong. Here's what actually sells:", category: 'realestate', score: 94 },
+            { text: "I've closed AED 500M in property deals. The one skill that made the difference:", category: 'realestate', score: 91 },
+            { text: "The Dubai off-plan market is about to shift. 3 signals I'm watching closely:", category: 'realestate', score: 89 },
+            { text: "Stop buying property in Dubai based on location. Start buying based on this:", category: 'realestate', score: 87 },
+            { text: "Dubai developers don't want you to know this about off-plan pricing:", category: 'realestate', score: 92 },
+            { text: "I analyzed 500 Dubai property transactions. The pattern that predicts appreciation:", category: 'realestate', score: 90 },
+            { text: "The biggest mistake I see international buyers make in Dubai real estate:", category: 'realestate', score: 86 },
+            { text: "Why 80% of Dubai off-plan buyers lose money (and how to be in the 20%):", category: 'realestate', score: 93 },
+            { text: "I toured 100 Dubai properties last month. Only 3 were worth buying. Here's why:", category: 'realestate', score: 88 },
+            { text: "The Dubai Golden Visa changed everything about property investment. Here's how:", category: 'realestate', score: 85 },
+            
+            // AI in Business
+            { text: "Unpopular opinion: AI won't replace real estate agents. It'll make the good ones unstoppable.", category: 'ai', score: 93 },
+            { text: "ChatGPT wrote my last investor presentation. Here's what happened:", category: 'ai', score: 91 },
+            { text: "AI didn't take my job. It gave me superpowers. Here's my exact workflow:", category: 'ai', score: 95 },
+            { text: "I automated 80% of my work with AI. My boss has no idea. Here's my stack:", category: 'ai', score: 94 },
+            { text: "Everyone's building AI tools. Nobody's solving the real problem:", category: 'ai', score: 89 },
+            { text: "The AI tool that 10x'd my productivity (and it's not ChatGPT):", category: 'ai', score: 88 },
+            { text: "I replaced a $50K/year employee with a $20/month AI tool. The results:", category: 'ai', score: 92 },
+            { text: "Stop using AI for content. Start using it for this instead:", category: 'ai', score: 87 },
+            { text: "The AI prompt that made me $100K. Copy it:", category: 'ai', score: 96 },
+            { text: "AI will create 2 types of workers: 10x performers and the unemployed. Here's which one you'll be:", category: 'ai', score: 90 },
+            
+            // Strategy & Operations  
+            { text: "I spent 5 years building SOPs for a 200-person company. The framework that changed everything:", category: 'strategy', score: 88 },
+            { text: "Your strategy deck is worthless. Here's what actually drives results:", category: 'strategy', score: 86 },
+            { text: "The best advice I ever ignored (and what it cost me):", category: 'strategy', score: 84 },
+            { text: "I've built 60+ KPI dashboards. 90% of companies measure the wrong things:", category: 'strategy', score: 87 },
+            { text: "Stop saying 'innovative.' Start doing this instead:", category: 'strategy', score: 82 },
+            { text: "The one meeting that transformed our company culture:", category: 'strategy', score: 85 },
+            { text: "I cut our operational costs by 40% with one framework. Here it is:", category: 'strategy', score: 89 },
+            { text: "Every CEO I know makes this mistake in their first 90 days:", category: 'strategy', score: 83 },
+            
+            // Leadership
+            { text: "Most leaders make this mistake in their first 90 days. I made it too:", category: 'leadership', score: 86 },
+            { text: "I asked 50 C-suite executives their biggest regret. The #1 answer surprised me:", category: 'leadership', score: 88 },
+            { text: "I turned down a promotion. Best career decision I ever made. Here's why:", category: 'leadership', score: 87 },
+            { text: "The leadership book nobody talks about (that changed how I manage):", category: 'leadership', score: 84 },
+            { text: "I fired my top performer. Here's why it was the right call:", category: 'leadership', score: 91 },
+            { text: "The 5AM club is a lie. Here's what actually makes leaders productive:", category: 'leadership', score: 89 },
+            
+            // Career Growth
+            { text: "I got promoted 3 times in 2 years. Here's the email template that made it happen:", category: 'career', score: 92 },
+            { text: "The career advice I wish I got at 25:", category: 'career', score: 85 },
+            { text: "I went from Assistant Manager to Strategy Director in 5 months. The exact playbook:", category: 'career', score: 94 },
+            { text: "Stop asking for raises. Start doing this instead:", category: 'career', score: 88 },
+            { text: "The LinkedIn DM that landed me my dream job:", category: 'career', score: 90 },
+            { text: "I interview 100+ candidates a year. The red flag that instantly disqualifies you:", category: 'career', score: 87 },
+            { text: "Your resume is lying to you. Here's what actually gets you hired:", category: 'career', score: 86 },
+            { text: "The side project that made me more than my salary:", category: 'career', score: 89 }
+        ];
+
+        // Hashtags by category
+        const HASHTAGS = {
+            realestate: ['#DubaiRealEstate', '#PropertyInvestment', '#RealEstateDubai', '#UAEProperty', '#OffPlanDubai', '#DubaiDevelopers', '#LuxuryRealEstate', '#RealEstateInvesting', '#DubaiProperty', '#PropertyDubai'],
+            ai: ['#AI', '#ArtificialIntelligence', '#ChatGPT', '#AIinBusiness', '#FutureOfWork', '#AITools', '#Automation', '#MachineLearning', '#AIStrategy', '#DigitalTransformation'],
+            strategy: ['#Strategy', '#BusinessStrategy', '#Operations', '#KPIs', '#BusinessGrowth', '#Execution', '#Leadership', '#Management', '#ProcessImprovement', '#BusinessOps'],
+            leadership: ['#Leadership', '#LeadershipDevelopment', '#CEO', '#ExecutiveLeadership', '#TeamManagement', '#PeopleManagement', '#CultureBuilding', '#LeadershipTips'],
+            career: ['#CareerGrowth', '#CareerAdvice', '#ProfessionalDevelopment', '#CareerTips', '#JobSearch', '#PersonalBrand', '#LinkedInTips', '#Networking'],
+            general: ['#LinkedIn', '#ThoughtLeadership', '#Entrepreneurship', '#Business', '#Success', '#Motivation', '#Dubai', '#UAE', '#MiddleEast']
+        };
+
+        // Templates
+        const TEMPLATES = {
+            insight: `Here's a contrarian take that might ruffle some feathers:
+
+[Your bold insight here]
+
+Most people believe [common belief].
+
+But after [your experience/data], I've learned:
+
+→ [Point 1]
+→ [Point 2]  
+→ [Point 3]
+
+The uncomfortable truth?
+
+[Key takeaway that challenges assumptions]
+
+Agree or disagree? Drop your take below 👇`,
+
+            story: `Last week, something happened that changed how I think about [topic].
+
+Here's the story:
+
+[Set the scene - where were you, what were you doing]
+
+[The challenge or problem you faced]
+
+[The turning point - what changed]
+
+[The resolution]
+
+The lesson I'll never forget:
+
+→ [Takeaway 1]
+→ [Takeaway 2]
+→ [Takeaway 3]
+
+Has this ever happened to you? 👇`,
+
+            contrarian: `Unpopular opinion:
+
+[Your controversial take]
+
+I know this will trigger some people. But hear me out.
+
+The common belief: [what most people think]
+
+The reality: [what's actually true]
+
+Here's my evidence:
+
+1. [Data point or example]
+2. [Data point or example]
+3. [Data point or example]
+
+I'm ready for the comments. Change my mind. 👇`,
+
+            list: `[Number] [things/lessons/rules] about [topic] that changed my career:
+
+1. [Point]
+   ↳ [Brief explanation]
+
+2. [Point]
+   ↳ [Brief explanation]
+
+3. [Point]
+   ↳ [Brief explanation]
+
+4. [Point]
+   ↳ [Brief explanation]
+
+5. [Point]
+   ↳ [Brief explanation]
+
+Which one hits hardest? 👇
+
+♻️ Repost to help someone who needs this`,
+
+            carousel: `[SLIDE 1 - HOOK]
+[Attention-grabbing title/question]
+
+[SLIDE 2 - THE PROBLEM]
+[Describe the pain point everyone feels]
+
+[SLIDE 3 - WHY IT MATTERS]
+[Stakes - what happens if they don't solve it]
+
+[SLIDE 4-7 - THE SOLUTION]
+[One actionable point per slide]
+
+[SLIDE 8 - SUMMARY]
+[Quick recap of key points]
+
+[SLIDE 9 - CTA]
+[Follow for more / Save this / Tag someone]`,
+
+            poll: `Quick question for my network:
+
+[Your engaging question]
+
+🔵 [Option A]
+🟢 [Option B]  
+🟡 [Option C]
+🔴 [Option D]
+
+I'll share the results + my analysis in 48 hours.
+
+Vote AND drop your reasoning below 👇
+
+The best comment gets a shoutout.`,
+
+            achievement: `Proud moment 🎉
+
+[Your achievement]
+
+But let me tell you what REALLY made this happen:
+
+It wasn't [what people might assume]
+
+It was:
+
+→ [Real factor 1]
+→ [Real factor 2]
+→ [Real factor 3]
+
+To anyone working toward something similar:
+
+[Encouraging advice]
+
+What's a win you're proud of this week? 👇`,
+
+            question: `Genuine question for [your audience]:
+
+[Your thought-provoking question]
+
+I've been thinking about this because [context].
+
+My current thinking:
+[Your perspective]
+
+But I want to hear from you:
+
+→ What's your experience?
+→ What am I missing?
+→ What would you do differently?
+
+Best insights get featured in my next post 👇`
+        };
+
+        // Inspiration posts
+        const INSPIRATION = [
+            { pattern: 'Contrarian Opening', example: '"Unpopular opinion: [X]"', why: 'Creates immediate tension and curiosity' },
+            { pattern: 'Number + Outcome', example: '"I spent 5 years doing [X]. Here are 7 lessons:"', why: 'Specific numbers build credibility' },
+            { pattern: 'Common Belief Flip', example: '"Everyone thinks [X]. They\'re wrong."', why: 'Challenges assumptions, triggers engagement' },
+            { pattern: 'Confession Hook', example: '"I made a mistake. Here\'s what I learned:"', why: 'Vulnerability creates connection' },
+            { pattern: 'Direct Command', example: '"Stop [behavior]. Start [better behavior]."', why: 'Authoritative, actionable' },
+            { pattern: 'Insider Secret', example: '"[Industry] has a secret. Most won\'t tell you:"', why: 'FOMO + exclusivity' },
+            { pattern: 'Social Proof', example: '"I asked 50 CEOs their #1 tip. Here\'s what they said:"', why: 'Borrowed credibility' },
+            { pattern: 'Before/After', example: '"2 years ago I was [struggle]. Today I\'m [success]."', why: 'Transformation story hook' }
+        ];
+
+        let selectedHashtags = [];
+        let currentCategory = 'all';
+
+        function init() {
+            renderHooks();
+            renderHashtags();
+            renderTimeHeatmap();
+            renderInspiration();
+            analyzePost();
+            
+            // Load draft if exists
+            const draft = localStorage.getItem('linkedinDraft');
+            if (draft) {
+                document.getElementById('postEditor').value = draft;
+                analyzePost();
+            }
+        }
+
+        function filterHooks(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderHooks();
+        }
+
+        function renderHooks() {
+            let hooks = currentCategory === 'all' ? HOOKS : HOOKS.filter(h => h.category === currentCategory);
+            hooks = hooks.sort(() => Math.random() - 0.5).slice(0, 8);
+
+            document.getElementById('hooksList').innerHTML = hooks.map(h => `
+                <div class="hook-card" onclick="useHook(\`${h.text.replace(/`/g, '\\`')}\`)">
+                    <div class="hook-text">${h.text}</div>
+                    <div class="hook-meta">
+                        <span class="hook-category">${h.category}</span>
+                        <span class="hook-score">🔥 ${h.score}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function refreshHooks() {
+            renderHooks();
+            showToast('Hooks refreshed!');
+        }
+
+        function useHook(text) {
+            document.getElementById('postEditor').value = text + '\n\n';
+            document.getElementById('postEditor').focus();
+            analyzePost();
+            showToast('Hook added! Now expand on it.');
+        }
+
+        function renderHashtags() {
+            const all = [...new Set([
+                ...HASHTAGS.general,
+                ...HASHTAGS.realestate,
+                ...HASHTAGS.ai,
+                ...HASHTAGS.strategy,
+                ...HASHTAGS.career
+            ])].slice(0, 20);
+            
+            document.getElementById('hashtagList').innerHTML = all.map(h => `
+                <span class="hashtag ${selectedHashtags.includes(h) ? 'selected' : ''}" onclick="toggleHashtag('${h}')">${h}</span>
+            `).join('');
+            
+            document.getElementById('hashtagCount').textContent = `${selectedHashtags.length}/5 selected`;
+        }
+
+        function toggleHashtag(tag) {
+            if (selectedHashtags.includes(tag)) {
+                selectedHashtags = selectedHashtags.filter(t => t !== tag);
+            } else if (selectedHashtags.length < 5) {
+                selectedHashtags.push(tag);
+            } else {
+                showToast('Max 5 hashtags recommended!');
+                return;
+            }
+            renderHashtags();
+        }
+
+        function renderTimeHeatmap() {
+            const days = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const times = ['6AM', '8AM', '10AM', '12PM', '2PM', '4PM', '6PM', '8PM'];
+            
+            const heat = [
+                [0, 0.2, 0.3, 0.3, 0.3, 0.2, 0.1, 0.1], // 6AM
+                [0, 0.5, 0.9, 0.95, 0.9, 0.6, 0.2, 0.1], // 8AM
+                [0, 0.6, 1.0, 1.0, 1.0, 0.7, 0.3, 0.2], // 10AM
+                [0, 0.7, 0.85, 0.9, 0.85, 0.8, 0.4, 0.3], // 12PM
+                [0, 0.4, 0.6, 0.65, 0.6, 0.5, 0.3, 0.2], // 2PM
+                [0, 0.5, 0.7, 0.75, 0.7, 0.6, 0.4, 0.3], // 4PM
+                [0, 0.3, 0.5, 0.55, 0.5, 0.4, 0.3, 0.2], // 6PM
+                [0, 0.2, 0.3, 0.35, 0.3, 0.25, 0.2, 0.15] // 8PM
+            ];
+
+            let html = days.map(d => `<div class="time-cell time-header">${d}</div>`).join('');
+            
+            times.forEach((time, ti) => {
+                html += `<div class="time-cell time-header">${time}</div>`;
+                for (let di = 1; di < 8; di++) {
+                    const h = heat[ti][di];
+                    const cls = h >= 0.9 ? 'heat-max' : h >= 0.7 ? 'heat-high' : h >= 0.4 ? 'heat-med' : 'heat-low';
+                    const pct = Math.round(h * 100);
+                    html += `<div class="time-cell time-slot ${cls}" title="${days[di]} ${time}: ${pct}% engagement">${h >= 0.9 ? '★' : ''}</div>`;
+                }
+            });
+
+            document.getElementById('timeHeatmap').innerHTML = html;
+        }
+
+        function renderInspiration() {
+            document.getElementById('inspirationPosts').innerHTML = INSPIRATION.map(p => `
+                <div class="hook-card" style="border-left: 3px solid var(--linkedin);">
+                    <div style="font-weight: 600; color: var(--accent); font-size: 0.8rem; margin-bottom: 4px;">${p.pattern}</div>
+                    <div style="font-size: 0.85rem; margin-bottom: 6px; font-style: italic;">"${p.example}"</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);">Why: ${p.why}</div>
+                </div>
+            `).join('');
+        }
+
+        function setTemplate(type) {
+            document.querySelectorAll('.template-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('postEditor').value = TEMPLATES[type];
+            analyzePost();
+        }
+
+        function analyzePost() {
+            const text = document.getElementById('postEditor').value;
+            const length = text.length;
+            const words = text.split(/\s+/).filter(w => w).length;
+
+            // Character count
+            const charCount = document.getElementById('charCount');
+            charCount.textContent = `${length.toLocaleString()} / 3,000 characters`;
+            charCount.className = 'char-count' + (length > 2800 ? ' danger' : length > 2500 ? ' warning' : '');
+
+            // Word count & read time
+            document.getElementById('wordCount').textContent = words;
+            document.getElementById('readTime').textContent = Math.ceil(words / 200) + ' min';
+
+            // Viral score calculation
+            let score = 0;
+            const checks = [];
+            
+            // Hook analysis (first 3 lines)
+            const lines = text.split('\n').filter(l => l.trim());
+            const firstLine = lines[0] || '';
+            
+            if (firstLine.length > 30 && firstLine.length < 120) {
+                score += 15;
+                checks.push({ text: 'Strong hook length', pass: true });
+            } else {
+                checks.push({ text: 'Hook too short/long', pass: false });
+            }
+
+            if (/[?:]$/.test(firstLine)) {
+                score += 10;
+                checks.push({ text: 'Hook creates curiosity', pass: true });
+            } else {
+                checks.push({ text: 'Hook needs ? or :', pass: false });
+            }
+
+            if (/\d/.test(firstLine)) {
+                score += 8;
+                checks.push({ text: 'Uses specific numbers', pass: true });
+            }
+
+            // Structure
+            if (text.includes('\n\n')) {
+                score += 10;
+                checks.push({ text: 'Good paragraph breaks', pass: true });
+            } else {
+                checks.push({ text: 'Add paragraph breaks', pass: false });
+            }
+
+            if (/[→•\-►▸]\s/.test(text) || /^\d+[\.\)]/m.test(text)) {
+                score += 10;
+                checks.push({ text: 'Uses formatting/lists', pass: true });
+            } else {
+                checks.push({ text: 'Add bullet points', pass: false });
+            }
+
+            // Length optimization (sweet spot: 800-2000 chars)
+            if (length >= 800 && length <= 2000) {
+                score += 15;
+                checks.push({ text: 'Optimal length', pass: true });
+            } else if (length >= 400 && length <= 2500) {
+                score += 8;
+                checks.push({ text: 'Good length', pass: true });
+            } else {
+                checks.push({ text: 'Adjust length', pass: false });
+            }
+
+            // Call to action
+            if (/\?[\s]*$|👇|comment|thoughts|agree|disagree|share|repost/i.test(text)) {
+                score += 12;
+                checks.push({ text: 'Has call-to-action', pass: true });
+            } else {
+                checks.push({ text: 'Add CTA at end', pass: false });
+            }
+
+            // Emotional/power words
+            const powerWords = /amazing|incredible|powerful|secret|truth|mistake|lesson|changed|surprising|shocking|proven|guaranteed|exclusive|insider|breakthrough|transform|discover/i;
+            if (powerWords.test(text)) {
+                score += 8;
+                checks.push({ text: 'Uses power words', pass: true });
+            }
+
+            // Personal element
+            if (/\bI\b|my|me/i.test(text)) {
+                score += 7;
+                checks.push({ text: 'Personal perspective', pass: true });
+            }
+
+            // Emoji usage (moderate)
+            const emojiCount = (text.match(/[\u{1F300}-\u{1F9FF}]/gu) || []).length;
+            if (emojiCount >= 1 && emojiCount <= 5) {
+                score += 5;
+            }
+
+            score = Math.min(100, Math.max(0, score));
+
+            document.getElementById('viralScore').textContent = score;
+            document.getElementById('viralGauge').style.setProperty('--score', score);
+            
+            // Breakdown text
+            const rating = score >= 80 ? '🔥 Viral potential!' : score >= 60 ? '👍 Good foundation' : score >= 40 ? '📝 Needs work' : '⚠️ Keep editing';
+            document.getElementById('viralBreakdown').innerHTML = rating;
+
+            // Checklist
+            document.getElementById('viralChecklist').innerHTML = checks.map(c => 
+                `<span style="color: ${c.pass ? 'var(--green)' : 'var(--text-muted)'}">${c.pass ? '✓' : '○'} ${c.text}</span>`
+            ).join('');
+
+            // Engagement estimates (based on ~3K followers)
+            const baseEngagement = score * 3;
+            document.getElementById('estLikes').textContent = Math.round(baseEngagement * (0.8 + Math.random() * 0.4));
+            document.getElementById('estComments').textContent = Math.round(baseEngagement * 0.12 * (0.8 + Math.random() * 0.4));
+            document.getElementById('estImpressions').textContent = (Math.round(baseEngagement * 15 * (0.8 + Math.random() * 0.4) / 100) / 10).toFixed(1) + 'K';
+
+            // Readability
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+            const avgWordsPerSentence = sentences > 0 ? words / sentences : 0;
+            const readability = avgWordsPerSentence < 12 ? 'Easy ✓' : avgWordsPerSentence < 20 ? 'Medium' : 'Hard ⚠️';
+            document.getElementById('readabilityScore').textContent = readability;
+
+            // Hook strength
+            const hookScore = firstLine.length > 40 && firstLine.length < 120 && /[?:]/.test(firstLine) ? 'Strong 💪' : firstLine.length > 20 ? 'Medium' : 'Weak ⚠️';
+            document.getElementById('hookStrength').textContent = hookScore;
+
+            // Auto-save
+            localStorage.setItem('linkedinDraft', text);
+        }
+
+        // AI Rewrite function (simulated - in production would call Claude API)
+        async function aiRewrite(style) {
+            const text = document.getElementById('postEditor').value;
+            if (!text || text.length < 20) {
+                showToast('Write more content first!');
+                return;
+            }
+
+            const btn = document.getElementById(`btn-${style}`);
+            btn.classList.add('loading');
+            document.getElementById('aiStatus').innerHTML = '<span class="spinner"></span> Processing...';
+            document.getElementById('aiStatus').style.color = 'var(--yellow)';
+
+            // Simulate AI processing delay
+            await new Promise(r => setTimeout(r, 1500));
+
+            // Style-specific transformations
+            const rewrites = {
+                bold: transformBold(text),
+                story: transformStory(text),
+                data: transformData(text),
+                controversial: transformControversial(text),
+                concise: transformConcise(text),
+                emotional: transformEmotional(text),
+                hook: transformHook(text),
+                cta: transformCTA(text),
+                professional: transformProfessional(text)
+            };
+
+            document.getElementById('postEditor').value = rewrites[style] || text;
+            analyzePost();
+            
+            btn.classList.remove('loading');
+            document.getElementById('aiStatus').innerHTML = '● Ready';
+            document.getElementById('aiStatus').style.color = 'var(--green)';
+            showToast(`Rewritten with ${style} style!`);
+        }
+
+        function transformBold(text) {
+            return text
+                .replace(/I think|maybe|perhaps|might|could be|possibly/gi, '')
+                .replace(/In my opinion,?\s*/gi, '')
+                .replace(/I believe/gi, 'The truth is')
+                .replace(/It seems/gi, 'The data shows')
+                .replace(/\.\s+/g, '. ')
+                .trim();
+        }
+
+        function transformStory(text) {
+            const firstLine = text.split('\n')[0];
+            return `Let me tell you a story.\n\n${text}\n\nThe lesson? Never underestimate the power of action.`;
+        }
+
+        function transformData(text) {
+            return text
+                .replace(/many|lots of|a lot of/gi, '73% of')
+                .replace(/some|several/gi, '8 out of 10')
+                .replace(/often|frequently/gi, 'in 89% of cases')
+                .replace(/most people/gi, '94% of professionals')
+                .replace(/rarely/gi, 'only 6% of the time');
+        }
+
+        function transformControversial(text) {
+            const firstLine = text.split('\n')[0];
+            if (!firstLine.toLowerCase().includes('unpopular')) {
+                return `Unpopular opinion:\n\n${text}\n\nReady for the hate. Change my mind. 👇`;
+            }
+            return text;
+        }
+
+        function transformConcise(text) {
+            return text
+                .split('\n')
+                .filter(l => l.trim())
+                .map(l => l.trim())
+                .filter((l, i, arr) => i < 8 || i === arr.length - 1)
+                .join('\n\n');
+        }
+
+        function transformEmotional(text) {
+            return text
+                .replace(/good/gi, 'incredible')
+                .replace(/bad/gi, 'devastating')
+                .replace(/important/gi, 'life-changing')
+                .replace(/learned/gi, 'discovered (the hard way)')
+                .replace(/change/gi, 'transform');
+        }
+
+        function transformHook(text) {
+            const lines = text.split('\n');
+            const hooks = [
+                "Stop scrolling. This will change how you think about",
+                "I'm about to share something controversial:",
+                "Nobody talks about this, but it's crucial:",
+                "This might upset some people, but:"
+            ];
+            const randomHook = hooks[Math.floor(Math.random() * hooks.length)];
+            lines[0] = randomHook + '\n\n' + lines[0];
+            return lines.join('\n');
+        }
+
+        function transformCTA(text) {
+            if (!/👇|\?$|comment|share|repost/i.test(text)) {
+                return text + '\n\n---\n\n👇 Drop your thoughts below\n♻️ Repost if this resonated\n🔔 Follow for more insights like this';
+            }
+            return text;
+        }
+
+        function transformProfessional(text) {
+            return text
+                .replace(/gonna|wanna|gotta/gi, match => {
+                    const map = { gonna: 'going to', wanna: 'want to', gotta: 'have to' };
+                    return map[match.toLowerCase()] || match;
+                })
+                .replace(/!/g, '.')
+                .replace(/🔥|💯|😤/g, '');
+        }
+
+        function postToLinkedIn() {
+            const text = document.getElementById('postEditor').value;
+            const hashtags = selectedHashtags.join(' ');
+            const fullPost = encodeURIComponent(text + (hashtags ? '\n\n' + hashtags : ''));
+            
+            // LinkedIn share URL
+            const linkedinUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${fullPost}`;
+            window.open(linkedinUrl, '_blank');
+            showToast('Opening LinkedIn to post...');
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('postEditor').value;
+            const hashtags = selectedHashtags.join(' ');
+            const full = text + (hashtags ? '\n\n' + hashtags : '');
+            
+            navigator.clipboard.writeText(full).then(() => {
+                showToast('Copied! Paste in LinkedIn.');
+            });
+        }
+
+        function saveDraft() {
+            localStorage.setItem('linkedinDraft', document.getElementById('postEditor').value);
+            localStorage.setItem('linkedinHashtags', JSON.stringify(selectedHashtags));
+            showToast('Draft saved locally!');
+        }
+
+        function loadDraft() {
+            const draft = localStorage.getItem('linkedinDraft');
+            const hashtags = localStorage.getItem('linkedinHashtags');
+            if (draft) {
+                document.getElementById('postEditor').value = draft;
+                analyzePost();
+            }
+            if (hashtags) {
+                selectedHashtags = JSON.parse(hashtags);
+                renderHashtags();
+            }
+            showToast('Draft loaded!');
+        }
+
+        function clearEditor() {
+            if (confirm('Clear the editor?')) {
+                document.getElementById('postEditor').value = '';
+                analyzePost();
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
