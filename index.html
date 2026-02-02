@@ -735,6 +735,14 @@
         </header>
 
         <!-- LinkedIn Analytics - Jason's Real Data -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+                📊 Last updated: <span id="lastUpdated">Feb 2, 2026 @ 2:14 PM</span>
+            </div>
+            <button onclick="refreshStats()" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.75rem;">
+                🔄 Refresh Stats
+            </button>
+        </div>
         <div class="analytics-bar">
             <a href="https://www.linkedin.com/feed/followers/" target="_blank" class="analytics-item">
                 <div class="analytics-value">182</div>
@@ -1599,6 +1607,16 @@ Best insights get featured in my next post 👇`
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function refreshStats() {
+            const message = "refresh linkedin stats";
+            navigator.clipboard.writeText(message).then(() => {
+                showToast("📋 Copied! Paste 'refresh linkedin stats' to Bumble 🐝");
+            }).catch(() => {
+                // Fallback for older browsers
+                prompt("Send this to Bumble:", message);
+            });
         }
 
         // Initialize
